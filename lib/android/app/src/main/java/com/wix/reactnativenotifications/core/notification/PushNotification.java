@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -22,6 +24,11 @@ import com.wix.reactnativenotifications.core.InitialNotificationHolder;
 import com.wix.reactnativenotifications.core.JsIOHelper;
 import com.wix.reactnativenotifications.core.NotificationIntentAdapter;
 import com.wix.reactnativenotifications.core.ProxyService;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import static com.wix.reactnativenotifications.Defs.NOTIFICATION_OPENED_EVENT_NAME;
 import static com.wix.reactnativenotifications.Defs.NOTIFICATION_RECEIVED_EVENT_NAME;
@@ -63,12 +70,15 @@ public class PushNotification implements IPushNotification {
 
     @Override
     public void onReceived() throws InvalidNotificationException {
-        postNotification(null);
+        if (!mNotificationProps.shouldNotPost()) {
+            postNotification(null);
+        }
         notifyReceivedToJS();
     }
 
     @Override
     public void onOpened() {
+        Log.d("pushtest", "onOpened");
         digestNotification();
         clearAllNotifications();
     }
@@ -90,6 +100,7 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void digestNotification() {
+        Log.d("pushtest", "digestNotification");
         if (!mAppLifecycleFacade.isReactInitialized()) {
             setAsInitialNotification();
             launchOrResumeApp();
@@ -113,6 +124,7 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void setAsInitialNotification() {
+        Log.d("pushtest", "setAsInitialNotification");
         InitialNotificationHolder.getInstance().set(mNotificationProps);
     }
 
@@ -149,6 +161,7 @@ public class PushNotification implements IPushNotification {
         final Notification.Builder notification = new Notification.Builder(mContext)
                 .setContentTitle(mNotificationProps.getTitle())
                 .setContentText(mNotificationProps.getBody())
+                .setLargeIcon(mNotificationProps.getIcon())
                 .setContentIntent(intent)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true);
@@ -185,6 +198,7 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void clearAllNotifications() {
+        Log.d("pushtest", "clearAllNotifications");
         final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
     }
@@ -198,6 +212,7 @@ public class PushNotification implements IPushNotification {
     }
 
     private void notifyOpenedToJS() {
+        Log.d("notifications", "notifiyOpenedToJS");
         Bundle response = new Bundle();
         response.putBundle("notification", mNotificationProps.asBundle());
 
