@@ -78,7 +78,6 @@ public class PushNotification implements IPushNotification {
 
     @Override
     public void onOpened() {
-        Log.d("pushtest", "onOpened");
         digestNotification();
         clearAllNotifications();
     }
@@ -100,7 +99,6 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void digestNotification() {
-        Log.d("pushtest", "digestNotification");
         if (!mAppLifecycleFacade.isReactInitialized()) {
             setAsInitialNotification();
             launchOrResumeApp();
@@ -124,7 +122,6 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void setAsInitialNotification() {
-        Log.d("pushtest", "setAsInitialNotification");
         InitialNotificationHolder.getInstance().set(mNotificationProps);
     }
 
@@ -198,7 +195,6 @@ public class PushNotification implements IPushNotification {
     }
 
     protected void clearAllNotifications() {
-        Log.d("pushtest", "clearAllNotifications");
         final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
     }
@@ -212,7 +208,6 @@ public class PushNotification implements IPushNotification {
     }
 
     private void notifyOpenedToJS() {
-        Log.d("notifications", "notifiyOpenedToJS");
         Bundle response = new Bundle();
         response.putBundle("notification", mNotificationProps.asBundle());
 

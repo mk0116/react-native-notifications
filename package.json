@@ -43,6 +43,9 @@
     "generate-changelog": "gren changelog",
     "docusaurus": "npm start --prefix website"
   },
+  "precommit": [
+    "build"
+  ],
   "nativePackage": true,
   "peerDependencies": {
     "react": ">=0.14.5",
