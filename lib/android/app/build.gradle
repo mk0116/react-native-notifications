@@ -95,6 +95,7 @@ android {
 dependencies {
     implementation "com.google.firebase:firebase-messaging:17.3.0"
     implementation 'com.facebook.react:react-native:+'
+    implementation "com.mixpanel.android:mixpanel-android:5.+"
 
     // tests
     testImplementation 'junit:junit:4.12'
